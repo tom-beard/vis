@@ -3,6 +3,9 @@
 library(tidyverse)
 library(eulerr)
 
+
+# 3-circle version --------------------------------------------------------
+
 plot_venn <- function(venn_title = NULL, labels,
                       proportion_2_overlap = 1/3, proportion_3_overlap = 1/3,
                       label_text_size = 12, fill_colour = "steelblue", alpha_adjust = 1) {
@@ -33,3 +36,25 @@ plot_venn("Lockdown sceptics",
 )
 
 ggsave("lockdown-sceptics.png", width = 6, height = 6, dpi = 100, type = "cairo")
+
+
+# 2-circle version --------------------------------------------------------
+
+labels = c(A = "Want\nwell-funded\npublic services",
+           B = "Want\nlow taxes",
+           AB = "Hipkins'\ntarget\nvoters")
+
+venn_structure <- c("A" = 1, "B" = 1, "A&B" = 1/3)
+alpha_pattern <- c(0.25, 0.25, 0.5)
+alpha_adjust <- 1
+fill_colour = "firebrick"
+
+venn_plot <- plot(
+  euler(venn_structure),
+  quantities = list(labels = labels, fontsize = 20),
+  labels = list(labels = c("", "", "")),
+  fills = list(fill = c("firebrick", "steelblue", "grey50"), alpha = alpha_pattern * alpha_adjust))
+
+patchwork::wrap_elements(venn_plot)
+
+ggsave("hipkins-voters.png", width = 6, height = 4, dpi = 100, type = "cairo")
